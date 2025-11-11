@@ -1,26 +1,41 @@
+/* ✅ 1. Import Fonts FIRST */
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@400;500&display=swap");
+
+/* ✅ 2. Then Import Tailwind */
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* ✅ 3. Then Your Custom Styles */
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: #f8f8f8;
+  color: #111;
+  font-family: "Inter", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Playfair Display", serif;
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+/* ✅ 4. Optional Font Utility Classes */
+.font-playfair {
+  font-family: "Playfair Display", serif;
+}
+
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
+
+header {
+  position: relative;
+  z-index: 50;
 }
