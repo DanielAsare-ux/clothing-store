@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { FirebaseError } from "firebase/app";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,28 @@ function LoginForm() {
       await login(email, password);
       router.push(redirectPath);
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      if (err instanceof FirebaseError) {
+        switch (err.code) {
+          case "auth/invalid-email":
+            setError("Please enter a valid email address.");
+            break;
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+          case "auth/invalid-credential":
+            setError("Invalid email or password. Please try again.");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many failed attempts. Please try again later.");
+            break;
+          case "auth/network-request-failed":
+            setError("Network error. Please check your connection and try again.");
+            break;
+          default:
+            setError("Failed to sign in. Please try again.");
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
       console.error(err);
     } finally {
       setLoading(false);
@@ -78,9 +100,14 @@ function LoginForm() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-              Password
-            </label>
+            <div className="flex items-center justify-between mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+                Password
+              </label>
+              <Link href="/forgot-password" className="text-sm text-orange-500 hover:text-orange-600 transition-colors">
+                Forgot password?
+              </Link>
+            </div>
             <input
               id="password"
               type="password"
