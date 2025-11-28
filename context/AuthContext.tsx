@@ -37,6 +37,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   googleLogin: () => Promise<void>;
+  updateUserProfile: (data: { displayName?: string; phoneNumber?: string }) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -140,9 +141,26 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     // Profile will be fetched by onAuthStateChanged listener
   };
 
+  const updateUserProfile = async (data: { displayName?: string; phoneNumber?: string }) => {
+    if (!user) throw new Error("No user logged in");
+    
+    const docRef = doc(db, "users", user.uid);
+    
+    // Update Firestore
+    await setDoc(docRef, data, { merge: true });
+    
+    // Update Firebase Auth display name if provided
+    if (data.displayName) {
+      await updateProfile(user, { displayName: data.displayName });
+    }
+    
+    // Update local state
+    setUserProfile((prev) => prev ? { ...prev, ...data } : null);
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, userProfile, loading, login, signup, logout, resetPassword, googleLogin }}
+      value={{ user, userProfile, loading, login, signup, logout, resetPassword, googleLogin, updateUserProfile }}
     >
       {children}
     </AuthContext.Provider>
