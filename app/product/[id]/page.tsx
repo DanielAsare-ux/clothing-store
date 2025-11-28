@@ -93,7 +93,7 @@ export default function ProductDetail() {
             className="text-2xl font-semibold mb-6"
             style={{ color: brand.colors.secondary }}
           >
-            GH₵ {product.price?.toFixed(2)}
+            {brand.currency} {product.price?.toFixed(2)}
           </p>
 
           {/* ✅ Add to Cart Button */}

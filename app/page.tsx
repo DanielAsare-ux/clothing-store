@@ -84,7 +84,7 @@ export default function Home() {
                 >
                   <div className="relative w-full h-56 mb-4">
                     <Image
-                      src={product.image || "/assets/logo/Flawless.jpg"}
+                      src={product.image || brand.logo}
                       alt={product.name}
                       fill
                       className="object-cover rounded-xl"
@@ -100,7 +100,7 @@ export default function Home() {
                     className="text-lg font-bold mt-2"
                     style={{ color: brand.colors.primary }}
                   >
-                    GH₵ {product.price?.toFixed(2) || "—"}
+                    {brand.currency} {product.price?.toFixed(2) || "—"}
                   </p>
                 </Link>
               ))}

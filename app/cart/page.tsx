@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import brand from "@/lib/brand";
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, getTotalPrice } = useCart();
@@ -47,7 +48,7 @@ export default function CartPage() {
                   <div>
                     <h2 className="font-semibold text-lg">{item.name}</h2>
                     <p className="text-gray-500">
-                      GH₵ {item.price.toFixed(2)} × {item.quantity}
+                      {brand.currency} {item.price.toFixed(2)} × {item.quantity}
                     </p>
                   </div>
                 </div>
@@ -64,7 +65,7 @@ export default function CartPage() {
 
           <div className="mt-10 text-right">
             <p className="text-xl font-semibold">
-              Total: GH₵ {getTotalPrice().toFixed(2)}
+              Total: {brand.currency} {getTotalPrice().toFixed(2)}
             </p>
             <div className="flex justify-end gap-4 mt-4">
               <button

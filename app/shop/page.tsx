@@ -97,7 +97,7 @@ export default function ShopPage() {
                   className="text-lg font-bold mt-2"
                   style={{ color: brand.colors.secondary }}
                 >
-                  GH₵ {product.price?.toFixed(2) || "—"}
+                  {brand.currency} {product.price?.toFixed(2) || "—"}
                 </p>
               </div>
             </Link>
