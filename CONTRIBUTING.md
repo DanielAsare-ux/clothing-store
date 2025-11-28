@@ -229,6 +229,8 @@ This can happen when trying to merge branches that don't share a common ancestor
 git merge origin/main --allow-unrelated-histories
 ```
 
+> ⚠️ **Warning**: Only use `--allow-unrelated-histories` in specific scenarios (like combining two separate repositories or initializing a new repository from another). This flag bypasses Git's safety mechanism, so make sure you understand why the histories are unrelated before using it.
+
 ### Abort a Merge in Progress
 
 If you want to cancel a merge that's in progress:
@@ -260,14 +262,19 @@ git branch -a
 
 ### Reset to a Clean State
 
-If things go wrong, you can reset to the last commit:
+If things go wrong, you can reset your working directory:
 
 ```bash
-# Soft reset (keeps changes staged)
+# Soft reset - undo last commit but keep changes staged
 git reset --soft HEAD~1
 
-# Hard reset (discards all changes - use with caution!)
-git reset --hard HEAD
+# Hard reset - undo last commit and discard all changes (use with caution!)
+git reset --hard HEAD~1
+
+# Discard all uncommitted changes (but keep commits)
+git checkout -- .
+# Or in newer Git versions:
+git restore .
 ```
 
 ### Update Your Fork (If Working on a Fork)
