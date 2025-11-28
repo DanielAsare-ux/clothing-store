@@ -136,6 +136,8 @@ git rebase origin/main
 git push --force-with-lease origin feature/your-feature-name
 ```
 
+> ⚠️ **Warning**: Force pushing overwrites the remote branch history. Only use this on your own feature branches and ensure no one else is working on the same branch. The `--force-with-lease` flag provides some protection by failing if the remote has new commits you haven't seen.
+
 ## Resolving Merge Conflicts
 
 Merge conflicts happen when the same lines of code have been modified in different branches.
@@ -272,9 +274,9 @@ git reset --soft HEAD~1
 git reset --hard HEAD~1
 
 # Discard all uncommitted changes (but keep commits)
-git checkout -- .
-# Or in newer Git versions:
 git restore .
+# For older Git versions (pre-2.23):
+git checkout -- .
 ```
 
 ### Update Your Fork (If Working on a Fork)
