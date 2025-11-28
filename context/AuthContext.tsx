@@ -7,6 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
+  signInWithPopup,
+  GoogleAuthProvider,
   User,
   updateProfile,
 } from "firebase/auth";
@@ -34,6 +36,7 @@ interface AuthContextType {
   ) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
+  googleLogin: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -116,9 +119,30 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await sendPasswordResetEmail(auth, email);
   };
 
+  const googleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    const result = await signInWithPopup(auth, provider);
+    
+    // Check if user profile exists in Firestore, if not create one
+    const docRef = doc(db, "users", result.user.uid);
+    const docSnap = await getDoc(docRef);
+    
+    if (!docSnap.exists()) {
+      // Create a new user profile in Firestore for Google sign-in users
+      await setDoc(docRef, {
+        email: result.user.email,
+        displayName: result.user.displayName,
+        phoneNumber: result.user.phoneNumber,
+        createdAt: new Date(),
+      });
+    }
+    
+    // Profile will be fetched by onAuthStateChanged listener
+  };
+
   return (
     <AuthContext.Provider
-      value={{ user, userProfile, loading, login, signup, logout, resetPassword }}
+      value={{ user, userProfile, loading, login, signup, logout, resetPassword, googleLogin }}
     >
       {children}
     </AuthContext.Provider>
