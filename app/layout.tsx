@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "@/components/navbar";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 export const metadata = {
   title: "Flawless - Clothing Store",
@@ -15,10 +16,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-gray-50">
-        <CartProvider>
-          <Navbar />
-          <div className="pt-20">{children}</div>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <Navbar />
+            <div className="pt-20">{children}</div>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

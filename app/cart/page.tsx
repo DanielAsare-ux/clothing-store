@@ -3,12 +3,14 @@
 import { useCart } from "@/context/CartContext";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import brand from "@/lib/brand";
 
 export default function CartPage() {
   const { cart, removeFromCart, clearCart, getTotalPrice } = useCart();
   const [isClient, setIsClient] = useState(false);
+  const router = useRouter();
 
   // ✅ Fix: Delay setState slightly to prevent warning
   useEffect(() => {
@@ -17,6 +19,10 @@ export default function CartPage() {
   }, []);
 
   if (!isClient) return null;
+
+  const handleCheckout = () => {
+    router.push("/checkout");
+  };
 
   return (
     <main className="min-h-screen bg-gray-50 py-10 px-6">
@@ -74,8 +80,11 @@ export default function CartPage() {
               >
                 Clear Cart
               </button>
-              <button className="px-5 py-2 bg-black text-white rounded hover:bg-gray-800">
-                Checkout
+              <button
+                onClick={handleCheckout}
+                className="px-5 py-2 bg-black text-white rounded hover:bg-gray-800"
+              >
+                Proceed to Checkout
               </button>
             </div>
           </div>

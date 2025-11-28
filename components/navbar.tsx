@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 import Image from "next/image";
 
 export default function Navbar() {
   const { cart } = useCart();
+  const { user, userProfile } = useAuth();
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
   return (
@@ -35,6 +37,23 @@ export default function Navbar() {
             </span>
           )}
         </Link>
+        {user ? (
+          <Link
+            href="/account"
+            className="hover:text-blue-600 transition-colors flex items-center gap-2"
+          >
+            <span className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-bold">
+              {userProfile?.displayName?.charAt(0)?.toUpperCase() || "U"}
+            </span>
+          </Link>
+        ) : (
+          <Link
+            href="/login"
+            className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition-colors"
+          >
+            Login
+          </Link>
+        )}
       </div>
     </nav>
   );
