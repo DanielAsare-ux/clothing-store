@@ -80,6 +80,7 @@ export default function AccountPage() {
     setEditPhone(userProfile?.phoneNumber || "");
     setIsEditing(false);
     setError("");
+    setSuccess("");
   };
 
   if (!isClient || loading) {
