@@ -5,6 +5,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { FirebaseError } from "firebase/app";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -32,7 +33,28 @@ function LoginForm() {
       await login(email, password);
       router.push(redirectPath);
     } catch (err) {
-      setError("Invalid email or password. Please try again.");
+      if (err instanceof FirebaseError) {
+        switch (err.code) {
+          case "auth/invalid-email":
+            setError("Please enter a valid email address.");
+            break;
+          case "auth/user-not-found":
+          case "auth/wrong-password":
+          case "auth/invalid-credential":
+            setError("Invalid email or password. Please try again.");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many failed attempts. Please try again later.");
+            break;
+          case "auth/network-request-failed":
+            setError("Network error. Please check your connection and try again.");
+            break;
+          default:
+            setError("Failed to sign in. Please try again.");
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
       console.error(err);
     } finally {
       setLoading(false);

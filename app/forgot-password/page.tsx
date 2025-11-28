@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import { FirebaseError } from "firebase/app";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -22,7 +23,26 @@ export default function ForgotPasswordPage() {
       await resetPassword(email);
       setSuccess(true);
     } catch (err) {
-      setError("Failed to send reset email. Please check if the email is correct.");
+      if (err instanceof FirebaseError) {
+        switch (err.code) {
+          case "auth/invalid-email":
+            setError("Please enter a valid email address.");
+            break;
+          case "auth/user-not-found":
+            setError("No account found with this email address.");
+            break;
+          case "auth/too-many-requests":
+            setError("Too many requests. Please try again later.");
+            break;
+          case "auth/network-request-failed":
+            setError("Network error. Please check your connection and try again.");
+            break;
+          default:
+            setError("Failed to send reset email. Please try again.");
+        }
+      } else {
+        setError("An unexpected error occurred. Please try again.");
+      }
       console.error(err);
     } finally {
       setLoading(false);
