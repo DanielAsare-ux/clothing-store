@@ -18,6 +18,7 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [deliveryAddress, setDeliveryAddress] = useState("");
   const [additionalNotes, setAdditionalNotes] = useState("");
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const timer = setTimeout(() => setIsClient(true), 0);
@@ -96,8 +97,10 @@ Order placed via Flawless Website`;
   };
 
   const handlePlaceOrder = async () => {
+    setError("");
+    
     if (!deliveryAddress.trim()) {
-      alert("Please enter a delivery address.");
+      setError("Please enter a delivery address.");
       return;
     }
 
@@ -136,9 +139,9 @@ Order placed via Flawless Website`;
       // Clear cart and redirect
       clearCart();
       router.push("/order-success");
-    } catch (error) {
-      console.error("Error placing order:", error);
-      alert("Failed to place order. Please try again.");
+    } catch (err) {
+      console.error("Error placing order:", err);
+      setError("Failed to place order. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -188,6 +191,12 @@ Order placed via Flawless Website`;
           {/* Customer Details & Delivery */}
           <div className="bg-white rounded-2xl shadow-lg p-6">
             <h2 className="text-xl font-semibold mb-4">Your Details</h2>
+            
+            {error && (
+              <div className="bg-red-50 text-red-600 px-4 py-3 rounded-lg mb-6 text-sm">
+                {error}
+              </div>
+            )}
             
             <div className="space-y-4 mb-6">
               <div>

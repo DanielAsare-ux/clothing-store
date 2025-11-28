@@ -74,8 +74,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const result = await signInWithEmailAndPassword(auth, email, password);
-    await fetchUserProfile(result.user.uid);
+    await signInWithEmailAndPassword(auth, email, password);
+    // Profile will be fetched by onAuthStateChanged listener
   };
 
   const signup = async (
